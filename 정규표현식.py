@@ -1,28 +1,13 @@
 import re
 
-pattern = re.compile(r'\d+')
-match = pattern.match('123abc')
-if match:
-    print(match.group())  # 123
+string = 'hello hjk790@gmail.com 010-222-3333 world 02-5678-9988'
 
+phone_pattern = re.compile(r'\d{2,3}-\d{3,4}-\d{4}') # raw, 위의 예에서 전화번호를 찾는 패턴
 
-import re
+phone_list = phone_pattern.findall(string)
+print(phone_list)
+print(re.findall(phone_pattern, string))
 
-pattern = re.compile(r'\d+')
-match = pattern.search('abc123')
-if match:
-    print(match.group())  # 123
-
-
-import re
-
-pattern = re.compile(r'\d+')
-matches = pattern.findall('abc123def456')
-print(matches)  # ['123', '456']
-
-import re
-
-pattern = re.compile(r'\d+')
-result = pattern.sub('NUMBER', 'abc123def456')
-# result = re.sub(pattern, 'NUMBER', 'abc123def456')
-print(result)  # abcNUMBERdefNUMBER
+email_pattern = re.compile(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')
+email_list = re.findall(email_pattern, string)
+print(email_list)

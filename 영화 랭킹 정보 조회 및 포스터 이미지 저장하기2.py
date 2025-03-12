@@ -4,6 +4,7 @@ from io import BytesIO
 from PIL import Image
 import re
 import os
+from urllib.parse import urlparse, parse_qs
 
 movie_ranking = requests.get("https://www.moviechart.co.kr/rank/realtime/index/image")
 
@@ -21,11 +22,15 @@ if movie_ranking.status_code == 200:
   print(f"수집한 영화 수: {len(movie_title_list)}")
 
   for movie_title, movie_image in zip(movie_title_list, movie_image_list):
-    image_src = movie_image.get('src')
-    image_response = requests.get("https://www.moviechart.co.kr" + image_src)
+    url = movie_image.get('src')
+    parsed_url = urlparse(url)
+    query_params = parse_qs(parsed_url.query)
+    image_src = query_params.get('source', [None])[0]
+    # image_response = requests.get('https://www.moviechart.co.kr' + image_src)
+    image_response = requests.get(image_src)
     img = Image.open(BytesIO(image_response.content))
     image_filename = re.sub(pattern, '', movie_title.text)
-    img.save(os.path.join(image_dir, image_filename + ".png"))
+    img.save(os.path.join(image_dir, image_filename + '.png'))
     print(movie_title.text, )
 else:
   print("페이지에 연결할 수 없습니다.")
